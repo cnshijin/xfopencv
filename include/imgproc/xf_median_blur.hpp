@@ -157,7 +157,7 @@ namespace xf{
     for(ap_uint<13> col=0; col<((img_width)>>XF_BITSHIFT(NPC))+col_loop_var; col++)
       {
         if(row<img_height && col<(img_width>>XF_BITSHIFT(NPC))) {
-          // row_ind[win_size-1] 代表已被处理的视频行或时间存放最久的视频行 
+          // row_ind[win_size-1] 代表已被处理的视频行或时间存放最久的视频行
           buf[row_ind[win_size-1]][col] = _src_mat.data[rd_ind]; // Read data
           rd_ind++;
         }
@@ -349,7 +349,9 @@ namespace xf{
           }
       }
 
-    // takes care of top borders，复制边界
+    // takes care of top borders，复制上边界
+    // win_size 等于 3 时，将行缓存 1 的内容复制到行缓存 0
+    // win_size 等于 5 时，将行缓存 2 的内容复制到行缓存 0~1
     for(col = 0; col < img_width>>XF_BITSHIFT(NPC); col++)
       {
         for(int init_buf=0; init_buf<WIN_SZ>>1; init_buf++)
@@ -363,7 +365,7 @@ namespace xf{
     for(row = (win_size>>1); row < img_height+(win_size>>1); row++)
       {
         P0 = 0;
-        ProcessMedian3x3<ROWS, COLS,PLANES, TYPE, NPC, WORDWIDTH, TC, WIN_SZ, WIN_SZ_SQ>
+        ProcessMedian3x3<ROWS, COLS, PLANES, TYPE, NPC, WORDWIDTH, TC, WIN_SZ, WIN_SZ_SQ>
           (_src, _dst, buf, src_buf, OutputValues, P0, img_width, img_height, shift_x, row_ind, row, win_size, rd_ind, wr_ind);
 
         //update indices
