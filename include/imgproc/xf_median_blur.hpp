@@ -134,7 +134,7 @@ namespace xf{
     uint16_t npc = XF_NPIXPERCYCLE(NPC);
     uint16_t col_loop_var = 0;
 
-	// col_loop_var 每行需要多处理的时钟个数
+    // col_loop_var 每行需要多处理的时钟个数
     if(npc == 1)
       {
         col_loop_var = (WIN_SZ>>1);
@@ -144,7 +144,7 @@ namespace xf{
         col_loop_var = 1;
       }
 
-	// 窗口寄存器初始化，npc+WIN_SZ-1 保证 src_buf 在水平方向上有 npc 个 1x3 窗口
+    // 窗口寄存器初始化，npc+WIN_SZ-1 保证 src_buf 在水平方向上有 npc 个 1x3 窗口
     for(int extract_px=0; extract_px<WIN_SZ; extract_px++)
       {
         for(int ext_copy=0; ext_copy<npc+WIN_SZ-1; ext_copy++)
@@ -157,7 +157,7 @@ namespace xf{
     for(ap_uint<13> col=0; col<((img_width)>>XF_BITSHIFT(NPC))+col_loop_var; col++)
       {
         if(row<img_height && col<(img_width>>XF_BITSHIFT(NPC))) {
-		  // row_ind[win_size-1] 代表已被处理的视频行或时间存放最久的视频行 
+          // row_ind[win_size-1] 代表已被处理的视频行或时间存放最久的视频行 
           buf[row_ind[win_size-1]][col] = _src_mat.data[rd_ind]; // Read data
           rd_ind++;
         }
@@ -197,7 +197,7 @@ namespace xf{
                   }
               }
 
-			// src_buf_temp_copy 移位存放至 src_buf 窗口寄存器
+            // src_buf_temp_copy 移位存放至 src_buf 窗口寄存器
             for(int extract_px=0; extract_px<WIN_SZ; extract_px++)
               {
                 for(int col_warp=0; col_warp<(WIN_SZ>>1); col_warp++)
@@ -213,7 +213,7 @@ namespace xf{
                   }
               }
 
-			// 图像左边界处理，复制
+            // 图像左边界处理，复制
             if(col == 0){
               for(int extract_px=0; extract_px<WIN_SZ; extract_px++)
                 {
@@ -224,7 +224,7 @@ namespace xf{
                 }
             }
 
-			// 并行处理窗口寄存器 src_buf_temp_med_apply，npc 个 xFMedianProc 处理单元
+            // 并行处理窗口寄存器 src_buf_temp_med_apply，npc 个 xFMedianProc 处理单元
             XF_PTUNAME(TYPE) src_buf_temp_med_apply[WIN_SZ][XF_NPIXPERCYCLE(NPC)+(WIN_SZ-1)];
             for(int applymedian=0; applymedian<npc; applymedian++)
               {
@@ -238,7 +238,7 @@ namespace xf{
                 OutputValues[applymedian] = OutputValues_percycle[0];
               }
 
-			// 输出滤波处理后的数值 P0
+            // 输出滤波处理后的数值 P0
             if(col>=1)
               {
                 shift_x = 0;
@@ -248,7 +248,7 @@ namespace xf{
                 wr_ind++;
               }
 
-			// 窗口寄存器移位更新
+            // 窗口寄存器移位更新
             for(int extract_px=0; extract_px<WIN_SZ; extract_px++)
               {
                 for(int col_warp=0; col_warp<(WIN_SZ>>1); col_warp++)
@@ -337,8 +337,8 @@ namespace xf{
 
     int rd_ind = 0;
 
-	// win_size 等于 3 时，有行缓存 0~2，先填充行缓存 1
-	// win_size 等于 5 时，有行缓存 0~4，先填充行缓存 2~3
+    // win_size 等于 3 时，有行缓存 0~2，先填充行缓存 1
+    // win_size 等于 5 时，有行缓存 0~4，先填充行缓存 2~3
   read_lines:
     for(int init_buf=row_ind[win_size>>1]; init_buf<row_ind[win_size-1]; init_buf++)
       {
